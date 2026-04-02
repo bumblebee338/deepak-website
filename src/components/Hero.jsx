@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useTheme } from '../context/ThemeContext'
 import { Scale, Building2, BookOpen } from 'lucide-react'
+import deepakImage from '../../public/deepak.jpeg'
 
 export default function Hero() {
   const { isDark } = useTheme()
@@ -165,7 +166,7 @@ export default function Hero() {
               }`}>
                 {/* Professional photo or placeholder */}
                 <img
-                  src="/deepak.jpeg"
+                  src={deepakImage}
                   alt="Deepak Yadav"
                   className="w-full h-full object-cover"
                   loading="lazy"

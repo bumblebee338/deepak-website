@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { profile } from '../data/profile'
 import { useTheme } from '../context/ThemeContext'
 import { CheckCircle2 } from 'lucide-react'
+import deepakImage from '../../public/deepak.jpeg'
 
 export default function About() {
   const { isDark } = useTheme()
@@ -52,7 +53,7 @@ export default function About() {
               isDark ? 'bg-gradient-to-br from-slate-800 to-slate-900' : 'bg-gradient-to-br from-slate-100 to-slate-200'
             }`}>
               <img
-                src="/deepak.jpeg"
+                src={deepakImage}
                 alt="Deepak Yadav"
                 className="w-full h-auto object-cover aspect-square"
                 loading="lazy"
