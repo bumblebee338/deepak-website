@@ -1,146 +1,239 @@
-import { motion } from 'framer-motion';
-import { profile } from '../data/profile';
-import { useTheme } from '../context/ThemeContext';
+import { motion } from 'framer-motion'
+import { profile } from '../data/profile'
+import { useTheme } from '../context/ThemeContext'
+import { Mail, MapPin, Phone, Send } from 'lucide-react'
+import { useState } from 'react'
 
 export default function Contact() {
-  const { isDark } = useTheme();
+  const { isDark } = useTheme()
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  })
+  const [submitted, setSubmitted] = useState(false)
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    // In a real app, you'd send this to a server
+    const mailtoLink = `mailto:${profile.contact.email}?subject=Legal Consultation Request&body=Name: ${formData.name}%0AEmail: ${formData.email}%0A%0AMessage:%0A${formData.message}`
+    window.location.href = mailtoLink
+    setSubmitted(true)
+    setTimeout(() => {
+      setSubmitted(false)
+      setFormData({ name: '', email: '', message: '' })
+    }, 3000)
+  }
+
+  const contactInfo = [
+    {
+      icon: MapPin,
+      label: 'Location',
+      value: profile.contact.location,
+    },
+    {
+      icon: Mail,
+      label: 'Email',
+      value: profile.contact.email,
+      href: `mailto:${profile.contact.email}`,
+    },
+    {
+      icon: Phone,
+      label: 'Phone',
+      value: profile.contact.phone,
+    },
+  ]
 
   return (
-    <section id="contact" className={`py-20 px-4 sm:px-6 lg:px-8 transition-theme ${
+    <section id="contact" className={`py-20 px-4 md:px-8 transition-colors duration-300 ${
       isDark
-        ? 'bg-gradient-to-br from-slate-900 to-slate-800'
-        : 'bg-gradient-to-br from-slate-900 to-blue-900'
-    } text-white`}>
+        ? 'bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950'
+        : 'bg-gradient-to-br from-slate-100 via-slate-50 to-slate-100'
+    }`}>
       <div className="max-w-6xl mx-auto">
+        {/* Section heading */}
         <motion.div
-          className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
+          className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 mb-4">
-            <div className="h-1 w-8 rounded-full bg-gold" />
-            <span className="text-sm font-semibold tracking-wide text-gold">GET IN TOUCH</span>
-            <div className="h-1 w-8 rounded-full bg-gold" />
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <div className={`h-1 w-8 rounded-full ${isDark ? 'bg-gold' : 'bg-navy'}`} />
+            <span className={`text-sm font-semibold uppercase tracking-wider ${
+              isDark ? 'text-gold' : 'text-navy'
+            }`}>Get In Touch</span>
+            <div className={`h-1 w-8 rounded-full ${isDark ? 'bg-gold' : 'bg-navy'}`} />
           </div>
-
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Schedule Your Consultation
+          <h2 className={`text-4xl md:text-5xl font-bold mb-4 ${
+            isDark ? 'text-white' : 'text-slate-900'
+          }`}>
+            Start Your Legal Journey
           </h2>
-
-          <p className="text-lg text-blue-100 max-w-2xl mx-auto">
-            Ready to discuss your legal matter? Reach out today and get expert legal guidance from an experienced advocate.
+          <p className={`text-lg ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+            {profile.contact.availability}
           </p>
         </motion.div>
 
-        {/* Contact Details Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
-          {/* Location */}
+        <div className="grid md:grid-cols-2 gap-12">
+          {/* Contact info cards */}
           <motion.div
-            className="group relative overflow-hidden glass p-8 rounded-2xl text-center border border-white/20 hover:border-gold/50 transition-all duration-300 hover:bg-white/15"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0, duration: 0.6 }}
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            whileHover={{ y: -4 }}
+            className="space-y-6"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-gold/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="relative z-10">
-              <div className="w-16 h-16 rounded-full bg-gold/20 group-hover:bg-gold/30 transition-all flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-gold mb-2 group-hover:text-white transition-colors">Location</h3>
-              <p className="text-blue-100">{profile.contact.location}</p>
-            </div>
+            {contactInfo.map((info, index) => {
+              const Icon = info.icon
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  viewport={{ once: true }}
+                  className={`p-6 rounded-xl border-2 transition-all duration-300 group cursor-pointer ${
+                    isDark
+                      ? 'bg-slate-800/50 border-slate-700 hover:border-gold'
+                      : 'bg-white border-slate-200 hover:border-navy'
+                  }`}
+                  onClick={() => info.href && (window.location.href = info.href)}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className={`p-3 rounded-lg transition-all duration-300 ${
+                      isDark
+                        ? 'bg-gold/10 group-hover:bg-gold/20'
+                        : 'bg-navy/10 group-hover:bg-navy/20'
+                    }`}>
+                      <Icon className={isDark ? 'text-gold' : 'text-navy'} size={24} />
+                    </div>
+                    <div>
+                      <h3 className={`font-semibold mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                        {info.label}
+                      </h3>
+                      <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                        {info.value}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              )
+            })}
           </motion.div>
 
-          {/* Email */}
+          {/* Contact form */}
           <motion.div
-            className="group relative overflow-hidden glass p-8 rounded-2xl text-center border border-white/20 hover:border-gold/50 transition-all duration-300 hover:bg-white/15"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            whileHover={{ y: -4 }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-gold/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="relative z-10">
-              <div className="w-16 h-16 rounded-full bg-gold/20 group-hover:bg-gold/30 transition-all flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                </svg>
+            <form onSubmit={handleSubmit} className={`p-8 rounded-xl border-2 ${
+              isDark
+                ? 'bg-slate-800/50 border-slate-700'
+                : 'bg-white border-slate-200'
+            }`}>
+              {/* Name input */}
+              <div className="mb-6">
+                <label className={`block text-sm font-semibold mb-2 ${
+                  isDark ? 'text-white' : 'text-slate-900'
+                }`}>
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className={`w-full px-4 py-3 rounded-lg border-2 transition-colors focus:outline-none focus:border-gold ${
+                    isDark
+                      ? 'bg-slate-900/50 border-slate-600 text-white'
+                      : 'bg-slate-50 border-slate-200 text-slate-900'
+                  }`}
+                  placeholder="Your full name"
+                />
               </div>
-              <h3 className="text-xl font-bold text-gold mb-2 group-hover:text-white transition-colors">Email</h3>
-              <a href={`mailto:${profile.contact.email}`} className="text-blue-100 hover:text-gold transition-colors cursor-pointer font-semibold">
-                {profile.contact.email}
-              </a>
-            </div>
-          </motion.div>
 
-          {/* Phone */}
-          <motion.div
-            className="group relative overflow-hidden glass p-8 rounded-2xl text-center border border-white/20 hover:border-gold/50 transition-all duration-300 hover:bg-white/15"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            viewport={{ once: true }}
-            whileHover={{ y: -4 }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-gold/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="relative z-10">
-              <div className="w-16 h-16 rounded-full bg-gold/20 group-hover:bg-gold/30 transition-all flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773c.151.374.418.835.773 1.299.36.466.822.91 1.299 1.299l.773-1.548a1 1 0 011.06-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 4 14.18 4 9.5V5a1 1 0 011-1h2.153z" />
-                </svg>
+              {/* Email input */}
+              <div className="mb-6">
+                <label className={`block text-sm font-semibold mb-2 ${
+                  isDark ? 'text-white' : 'text-slate-900'
+                }`}>
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className={`w-full px-4 py-3 rounded-lg border-2 transition-colors focus:outline-none focus:border-gold ${
+                    isDark
+                      ? 'bg-slate-900/50 border-slate-600 text-white'
+                      : 'bg-slate-50 border-slate-200 text-slate-900'
+                  }`}
+                  placeholder="your.email@example.com"
+                />
               </div>
-              <h3 className="text-xl font-bold text-gold mb-2 group-hover:text-white transition-colors">Phone</h3>
-              <p className="text-blue-100 font-semibold">{profile.contact.phone}</p>
-            </div>
+
+              {/* Message input */}
+              <div className="mb-6">
+                <label className={`block text-sm font-semibold mb-2 ${
+                  isDark ? 'text-white' : 'text-slate-900'
+                }`}>
+                  Message
+                </label>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  rows="5"
+                  className={`w-full px-4 py-3 rounded-lg border-2 transition-colors focus:outline-none focus:border-gold resize-none ${
+                    isDark
+                      ? 'bg-slate-900/50 border-slate-600 text-white'
+                      : 'bg-slate-50 border-slate-200 text-slate-900'
+                  }`}
+                  placeholder="Tell me about your legal needs..."
+                />
+              </div>
+
+              {/* Submit button */}
+              <motion.button
+                type="submit"
+                className="w-full px-6 py-3 bg-gradient-to-r from-blue-900 to-blue-800 text-white font-semibold rounded-lg flex items-center justify-center gap-2 hover:shadow-lg transition-all duration-200"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Send size={18} />
+                Send Message
+              </motion.button>
+
+              {/* Success message */}
+              {submitted && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-4 p-4 bg-green-900/30 text-green-300 rounded-lg text-center text-sm"
+                >
+                  Thank you! I'll get back to you soon.
+                </motion.div>
+              )}
+            </form>
           </motion.div>
         </div>
-
-        {/* Availability Banner */}
-        <motion.div
-          className="relative overflow-hidden max-w-3xl mx-auto rounded-2xl p-10 md:p-12 bg-gradient-to-r from-gold/10 via-gold/5 to-transparent border border-gold/30 glass"
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          viewport={{ once: true }}
-        >
-          {/* Background accent */}
-          <div className="absolute top-0 right-0 w-40 h-40 bg-gold/10 rounded-full -mr-20 -mt-20" />
-
-          <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-3 h-3 rounded-full bg-gold animate-pulse" />
-              <span className="text-sm font-semibold text-gold uppercase tracking-wide">READY TO HELP</span>
-            </div>
-
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">Available for Consultations</h3>
-            <p className="text-lg text-blue-100 leading-relaxed">
-              I'm available for legal consultations and case discussions across all practice areas. Don't hesitate to reach out with your legal matters—expert guidance is just a message away.
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-4">
-              <motion.a
-                href="#contact"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gold text-white rounded-lg font-semibold hover:bg-gold-light transition-colors cursor-pointer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span>Contact Now</span>
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </motion.a>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
-  );
+  )
 }

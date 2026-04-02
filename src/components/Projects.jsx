@@ -1,77 +1,127 @@
-import { useTheme } from '../context/ThemeContext';
-import { motion } from 'framer-motion';
-import { profile } from '../data/profile';
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (index) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: index * 0.1,
-      duration: 0.6
-    }
-  })
-};
+import { useTheme } from '../context/ThemeContext'
+import { motion } from 'framer-motion'
+import { profile } from '../data/profile'
+import { BookOpen, Calendar, FileText } from 'lucide-react'
 
 export default function Projects() {
-  const { isDark } = useTheme();
+  const { isDark } = useTheme()
 
-  const icons = [
-    'M9 4.804C9 4.36 9.359 4 9.833 4h.334c.474 0 .833.36.833.804v15.392c0 .444-.359.804-.833.804h-.334c-.474 0-.833-.36-.833-.804V4.804z',
-    'M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 011 1v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7z',
-    'M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v4h8v-4zM6 8a2 2 0 11-4 0 2 2 0 014 0z'
-  ];
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5 },
+    },
+  }
 
   return (
-    <section id="blog" className={`py-20 px-4 sm:px-6 lg:px-8 transition-theme ${isDark ? 'bg-slate-900' : 'bg-white'}`}>
+    <section id="blog" className={`py-20 px-4 md:px-8 transition-colors duration-300 ${
+      isDark ? 'bg-slate-900/50' : 'bg-slate-50'
+    }`}>
       <div className="max-w-6xl mx-auto">
-        <motion.h2
-          className={`text-4xl md:text-5xl font-bold mb-12 text-center transition-theme ${
-            isDark ? 'text-gold' : 'text-navy'
-          }`}
+        {/* Section heading */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
+          className="text-center mb-16"
         >
-          Featured Projects
-        </motion.h2>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <div className={`h-1 w-8 rounded-full ${isDark ? 'bg-gold' : 'bg-navy'}`} />
+            <span className={`text-sm font-semibold uppercase tracking-wider ${
+              isDark ? 'text-gold' : 'text-navy'
+            }`}>Publications</span>
+            <div className={`h-1 w-8 rounded-full ${isDark ? 'bg-gold' : 'bg-navy'}`} />
+          </div>
+          <h2 className={`text-4xl md:text-5xl font-bold ${
+            isDark ? 'text-white' : 'text-slate-900'
+          }`}>
+            Publications & Research
+          </h2>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Cards grid */}
+        <motion.div
+          className="grid md:grid-cols-3 gap-8"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           {profile.projects.map((project, index) => (
             <motion.div
-              key={project.title}
-              className={`rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer ${
-                isDark ? 'bg-slate-800' : 'bg-slate-50'
+              key={index}
+              variants={itemVariants}
+              className={`group relative overflow-hidden rounded-xl border-2 transition-all duration-300 h-full flex flex-col ${
+                isDark
+                  ? 'bg-slate-800/50 border-slate-700 hover:border-gold'
+                  : 'bg-white border-slate-200 hover:border-navy'
               }`}
-              custom={index}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
               whileHover={{ y: -4 }}
             >
-              <div className={`h-40 flex items-center justify-center ${
+              {/* Header area with icon */}
+              <div className={`h-32 flex items-center justify-center transition-all duration-300 ${
                 isDark
-                  ? 'bg-gradient-to-br from-slate-900 to-gold'
-                  : 'bg-gradient-to-br from-blue-900 to-gold'
+                  ? 'bg-gradient-to-br from-gold/10 to-transparent group-hover:from-gold/20'
+                  : 'bg-gradient-to-br from-navy/10 to-transparent group-hover:from-navy/20'
               }`}>
-                <svg className="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d={icons[index]} />
-                </svg>
+                <FileText className={`${isDark ? 'text-gold' : 'text-navy'}`} size={48} />
               </div>
-              <div className="p-6">
-                <h3 className={`text-xl font-bold mb-2 transition-theme ${
-                  isDark ? 'text-white' : 'text-navy'
-                }`}>{project.title}</h3>
-                <p className={`mb-4 transition-theme ${isDark ? 'text-slate-200' : 'text-slate-600'}`}>{project.description}</p>
-                <span className={`text-sm font-semibold transition-theme ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{project.duration}</span>
+
+              {/* Content */}
+              <div className="p-6 flex-1 flex flex-col">
+                {/* Type badge */}
+                {project.type && (
+                  <div className={`inline-block px-3 py-1 rounded-full text-xs font-semibold mb-3 w-fit ${
+                    isDark
+                      ? 'bg-gold/10 text-gold'
+                      : 'bg-navy/10 text-navy'
+                  }`}>
+                    {project.type}
+                  </div>
+                )}
+
+                {/* Title */}
+                <h3 className={`text-xl font-bold mb-3 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                  {project.title}
+                </h3>
+
+                {/* Description */}
+                <p className={`text-sm leading-relaxed mb-4 flex-1 ${
+                  isDark ? 'text-slate-400' : 'text-slate-600'
+                }`}>
+                  {project.description}
+                </p>
+
+                {/* Meta info */}
+                <div className={`text-xs flex items-center gap-2 ${
+                  isDark ? 'text-slate-500' : 'text-slate-500'
+                }`}>
+                  <Calendar size={14} />
+                  <span>{project.duration}</span>
+                </div>
               </div>
+
+              {/* Hover overlay */}
+              <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none ${
+                isDark ? 'bg-gradient-to-br from-gold' : 'bg-gradient-to-br from-navy'
+              }`} />
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
-  );
+  )
 }

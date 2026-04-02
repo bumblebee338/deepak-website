@@ -140,6 +140,54 @@ export const profile = {
     }
   ],
 
+  certifications: [
+    {
+      title: "B.A.LL.B. in Criminal Law",
+      issuer: "Alliance University, Bangalore",
+      year: "2024",
+      verified: true
+    },
+    {
+      title: "Mentorship - Supreme Court of India",
+      issuer: "Senior Advocate Pradeep Kumar Yadav",
+      year: "2022-2024",
+      verified: true
+    },
+    {
+      title: "Criminal Justice Administration Certification",
+      issuer: "Alliance Centre of Criminal Justice",
+      year: "2022-2024",
+      verified: true
+    }
+  ],
+
+  awards: [
+    {
+      title: "Excellence in Criminal Law",
+      issuer: "Alliance University",
+      year: "2024",
+      description: "Recognition for outstanding academic performance in criminal law studies"
+    },
+    {
+      title: "Supreme Court Internship Award",
+      issuer: "Supreme Court of India",
+      year: "2024",
+      description: "Awarded for exceptional contribution during internship under senior advocates"
+    },
+    {
+      title: "Young Advocate of Promise",
+      issuer: "Kanpur Bar Association",
+      year: "2024",
+      description: "Recognized as a promising advocate showing exceptional legal acumen"
+    },
+    {
+      title: "Human Rights Legal Excellence",
+      issuer: "High Court of Allahabad",
+      year: "2023",
+      description: "Commendation for dedicated work in human rights legal matters"
+    }
+  ],
+
   testimonials: [
     {
       initials: "RK",
